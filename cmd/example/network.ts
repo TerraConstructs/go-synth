@@ -1,23 +1,21 @@
 import { App, HttpBackend } from "cdktf";
-import { aws } from "@envtio/base";
+import { aws } from "terraconstructs";
 
 const outdir = "cdktf.out";
 const app = new App({
   outdir,
 });
-const stack = new aws.AwsSpec(app, "network-stack", {
+const stack = new aws.AwsStack(app, "network-stack", {
+  gridUUID: "12345678-1234",
+  environmentName: "test",
   providerConfig: {
     region: "us-west-2",
   },
 });
 
-new aws.network.SimpleIPv4(stack, "network", {
-  gridUUID: "12345678-1234",
-  environmentName: "test",
-  config: {
-    internalDomain: "example.com",
-    ipv4CidrBlock: "10.0.0.0/16",
-  },
+new aws.network.SimpleIPv4Vpc(stack, "network", {
+  internalDomain: "example.com",
+  ipv4CidrBlock: "10.0.0.0/16",
 });
 
 new HttpBackend(stack, {
