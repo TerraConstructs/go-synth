@@ -3,9 +3,9 @@ package executors
 import (
 	"testing"
 
-	"github.com/environment-toolkit/go-synth/models"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
+	"github.com/terraconstructs/go-synth/models"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

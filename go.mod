@@ -1,4 +1,4 @@
-module github.com/environment-toolkit/go-synth
+module github.com/terraconstructs/go-synth
 
 go 1.22.2
 

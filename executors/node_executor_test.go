@@ -5,8 +5,8 @@ import (
 	"os"
 	"testing"
 
-	"github.com/environment-toolkit/go-synth/models"
 	"github.com/spf13/afero"
+	"github.com/terraconstructs/go-synth/models"
 )
 
 func Test_nodeExecutor_Setup(t *testing.T) {

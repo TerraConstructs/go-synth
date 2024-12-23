@@ -7,10 +7,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/environment-toolkit/go-synth/models"
 	"github.com/gkampitakis/go-snaps/snaps"
 	"github.com/spf13/afero"
 	"github.com/stretchr/testify/require"
+	"github.com/terraconstructs/go-synth/models"
 )
 
 func Test_bunExecutor_BasicExec(t *testing.T) {

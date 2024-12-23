@@ -9,11 +9,11 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/environment-toolkit/go-synth"
-	"github.com/environment-toolkit/go-synth/executors"
 	"github.com/spf13/afero"
+	"github.com/terraconstructs/go-synth"
+	"github.com/terraconstructs/go-synth/executors"
 
-	"github.com/environment-toolkit/go-synth/models"
+	"github.com/terraconstructs/go-synth/models"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 )

@@ -4,10 +4,10 @@ import (
 	"context"
 	"os"
 
-	"github.com/environment-toolkit/go-synth/auth"
-	"github.com/environment-toolkit/go-synth/executors"
-	"github.com/environment-toolkit/go-synth/models"
 	"github.com/spf13/afero"
+	"github.com/terraconstructs/go-synth/auth"
+	"github.com/terraconstructs/go-synth/executors"
+	"github.com/terraconstructs/go-synth/models"
 	"go.uber.org/zap"
 )
 
