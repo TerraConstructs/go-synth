@@ -39,7 +39,7 @@ func (be *bunExecutor) Setup(ctx context.Context, conf models.AppConfig, envVars
 			"cdktf": "^0.20.7",
 		},
 		DevDependencies: map[string]string{},
-		Scopes:          []models.ScopedPackageOptions{},
+		Scopes:          append([]models.ScopedPackageOptions{}, conf.Scopes...),
 	}
 	maps.Copy(merged.Dependencies, conf.Dependencies)
 	maps.Copy(merged.DevDependencies, conf.DevDependencies)

@@ -1,6 +1,11 @@
-{{ if .Scopes -}}
+[install]
+# text bun.lock instead of binary bun.lockb (default since bun 1.2)
+saveTextLockfile = true
+# flat node_modules, so packages copied into the workspace resolve each other
+linker = "hoisted"
+{{ if .Scopes }}
 [install.scopes]
 {{- range $opt := .Scopes }}
-{{ $opt.Scope }} = { url = "{{ $opt.RegistryURL }}", token = "${{ $opt.AuthTokenEnvVar }}" }
+{{ $opt.Scope | toJson }} = { url = "{{ $opt.RegistryURL }}", token = "${{ $opt.AuthTokenEnvVar }}" }
 {{- end }}
 {{ end }}
