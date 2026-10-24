@@ -48,6 +48,31 @@ func Test_bunExecutor_Setup(t *testing.T) {
 	snapshotFs(t, "bun_setup", ".", be.fs)
 }
 
+func Test_bunExecutor_SetupScopes(t *testing.T) {
+	be := getTestBunExecutor()
+	defer be.Cleanup(context.Background())
+
+	tokenEnvVar := "ACME_NPM_TOKEN"
+	envVars := EnvMap(os.Environ())
+	envVars[tokenEnvVar] = "dummy"
+	// bun install fails with "failed to load bunfig" if the scope key is invalid TOML
+	err := be.Setup(context.Background(), models.AppConfig{
+		Scopes: []models.ScopedPackageOptions{
+			{
+				Scope:           "@acme",
+				RegistryURL:     "https://npm.acme.example/",
+				RequiresAuth:    true,
+				AuthTokenEnvVar: &tokenEnvVar,
+			},
+		},
+	}, envVars)
+	require.NoError(t, err)
+
+	bunfig, err := afero.ReadFile(be.fs, "bunfig.toml")
+	require.NoError(t, err)
+	require.Contains(t, string(bunfig), `"@acme" = { url = "https://npm.acme.example/", token = "$ACME_NPM_TOKEN" }`)
+}
+
 func Test_bunExecutor_Fixtures(t *testing.T) {
 	ctx := context.Background()
 	be := getTestBunExecutor()
@@ -107,7 +132,7 @@ func snapshotFs(t *testing.T, name, root string, fs afero.Fs) error {
 		if info.IsDir() && info.Name() == "node_modules" {
 			return filepath.SkipDir
 		}
-		if info.IsDir() || info.Name() == "bun.lockb" || info.Name() == "pnpm-lock.yaml" {
+		if info.IsDir() || info.Name() == "bun.lock" || info.Name() == "bun.lockb" || info.Name() == "pnpm-lock.yaml" {
 			return nil
 		}
 		content, err := afero.ReadFile(fs, path)

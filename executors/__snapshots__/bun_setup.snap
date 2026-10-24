@@ -1,6 +1,11 @@
 
 [Test_bunExecutor_Setup - 1]
 bunfig.toml
+[install]
+# text bun.lock instead of binary bun.lockb (default since bun 1.2)
+saveTextLockfile = true
+# flat node_modules, so packages copied into the workspace resolve each other
+linker = "hoisted"
 
 ---
 
