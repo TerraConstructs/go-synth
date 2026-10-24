@@ -106,6 +106,12 @@ This library has currently only been manually test on Linux (WSL) with Bun 1.1.2
 
 Feel free to open a ticket until CI/CD has been configured.
 
+### Docker bundling can't see my files (macOS / Colima)
+
+Executors create their workspace in a temporary directory. Constructs that bundle with Docker (e.g. `NodejsFunction` without a local esbuild) bind mount that workspace into a container. VM based Docker runtimes on macOS such as Colima only share `$HOME` by default, so the system temp dir (`/var/folders/...`) appears empty inside the container.
+
+On macOS the workspace therefore defaults to the user cache dir (`~/Library/Caches/go-synth`). Set `GO_SYNTH_TMPDIR` to use a different base directory on any platform.
+
 ## Todo
 
 - [x] Add Bun Executor
