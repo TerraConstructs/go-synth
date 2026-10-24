@@ -8,6 +8,7 @@ import (
 	"os"
 	"os/exec"
 	"path/filepath"
+	"runtime"
 	"strings"
 	"sync"
 
@@ -129,9 +130,38 @@ func ensurePath(dest afero.Fs, path string) error {
 	return nil
 }
 
+// TempDirEnvVar overrides the base directory for executor workspaces.
+const TempDirEnvVar = "GO_SYNTH_TMPDIR"
+
+// tempBaseDir returns the base directory for executor workspaces.
+//
+// Workspaces may be bind mounted into Docker containers (e.g. the esbuild
+// bundling fallback). On macOS, VM based runtimes such as Colima only share
+// $HOME by default, so the system temp dir (/var/folders/...) shows up empty
+// inside the container. Default to the user cache dir there instead.
+func tempBaseDir() (string, error) {
+	base := os.Getenv(TempDirEnvVar)
+	if base == "" && runtime.GOOS == "darwin" {
+		if cacheDir, err := os.UserCacheDir(); err == nil {
+			base = filepath.Join(cacheDir, "go-synth")
+		}
+	}
+	if base == "" {
+		return "", nil // os.MkdirTemp falls back to os.TempDir()
+	}
+	if err := os.MkdirAll(base, 0775); err != nil {
+		return "", fmt.Errorf("couldn't create temp base dir %s: %w", base, err)
+	}
+	return base, nil
+}
+
 // newTempFs creates a new temporary filesystem with the provided pattern.
 func newTempFs(pattern string) (afero.Fs, string, error) {
-	d, err := os.MkdirTemp("", pattern)
+	base, err := tempBaseDir()
+	if err != nil {
+		return nil, "", err
+	}
+	d, err := os.MkdirTemp(base, pattern)
 	if err != nil {
 		return nil, "", err
 	}

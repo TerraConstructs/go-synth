@@ -1,6 +1,9 @@
 package executors
 
 import (
+	"os"
+	"path/filepath"
+	"runtime"
 	"testing"
 
 	"github.com/spf13/afero"
@@ -104,4 +107,33 @@ func getPrettyLogger() *zap.Logger {
 	config.Encoding = "console"
 	logger, _ := config.Build()
 	return logger
+}
+
+func Test_newTempFs(t *testing.T) {
+	t.Run("honors GO_SYNTH_TMPDIR", func(t *testing.T) {
+		base := filepath.Join(t.TempDir(), "nested")
+		t.Setenv(TempDirEnvVar, base)
+
+		fs, dir, err := newTempFs("go-synth-test")
+		require.NoError(t, err)
+		require.Equal(t, base, filepath.Dir(dir))
+
+		require.NoError(t, afero.WriteFile(fs, "probe.txt", []byte("hi"), 0644))
+		_, err = os.Stat(filepath.Join(dir, "probe.txt"))
+		require.NoError(t, err)
+	})
+
+	t.Run("defaults to user cache dir on darwin", func(t *testing.T) {
+		if runtime.GOOS != "darwin" {
+			t.Skip("darwin only")
+		}
+		t.Setenv(TempDirEnvVar, "")
+		cacheDir, err := os.UserCacheDir()
+		require.NoError(t, err)
+
+		_, dir, err := newTempFs("go-synth-test")
+		require.NoError(t, err)
+		t.Cleanup(func() { os.RemoveAll(dir) })
+		require.Equal(t, filepath.Join(cacheDir, "go-synth"), filepath.Dir(dir))
+	})
 }
