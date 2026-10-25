@@ -102,7 +102,7 @@ While it is true Constructs may be written in Golang or TS Constructs can be cro
 
 ### Why doesn't it work on my machine?
 
-This library has currently only been manually test on Linux (WSL) with Bun 1.4.4, NodeJS v20 and pnpm v9.
+This library has currently only been manually test on Linux (WSL) with Bun 1.4.4, NodeJS v24 and pnpm v9.
 
 Feel free to open a ticket until CI/CD has been configured.
 

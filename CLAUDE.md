@@ -55,7 +55,7 @@ Go-synth is a Go library that dynamically synthesizes CDKTF (Cloud Development K
 ## Runtime Requirements
 
 **For BunExecutor**: Bun binary on PATH (>= v1.2 for the text `bun.lock`, tested with v1.4.4)
-**For NodeExecutor**: Node.js (>=18.0.0) and pnpm (v9.0.2) on PATH
+**For NodeExecutor**: Node.js (>=18.0.0, tested with v24) and pnpm (v9.0.2) on PATH
 
 Currently tested on Linux (WSL). Platform support for other OSes is planned.
 
